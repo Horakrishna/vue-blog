@@ -14,3 +14,7 @@
 Route::get('/', function () { 
     return view('welcome');
 });
+Route::get('/new','TestController@TestMethod');
+Route::any('{slug}',function(){
+    return view('welcome');
+});
