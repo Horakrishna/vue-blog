@@ -23,6 +23,7 @@
         "moment": "^2.27.0",
         "view-design": "^4.2.0",
         "vue": "^2.6.11",
-        "vue-router": "^3.3.1"
+        "vue-router": "^3.3.1",
+        "vuex": "^3.4.0"
     }
 }

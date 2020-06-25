@@ -10,11 +10,16 @@ Vue.use(Router)
 import Home from './components/pages/home'
 import Tag from './admin/pages/tag'
 import Category from './admin/pages/category'
+import useCom from './vuex/Usecom'
 
 const routes = [
     {
         path: '/',
         component: Home
+    },
+    {
+        path: '/useCom',
+        component: useCom
     },
     {
         path: '/tags',

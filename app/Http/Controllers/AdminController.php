@@ -76,10 +76,10 @@ class AdminController extends Controller
       $this->validate($request ,[
          'id'           => 'required',
          'categoryName' => 'required',
-         'categoryName' => 'required'
+         'iconImage'    => 'required'
          
     ]);
-    return Tag::where('id', $request->id)->update([
+    return Category::where('id', $request->id)->update([
      'categoryName' => $request->categoryName,
      'iconImage'    => $request->iconImage
     ]);

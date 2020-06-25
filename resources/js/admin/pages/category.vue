@@ -50,7 +50,7 @@
                             </div>
                         </Upload>
 						<div class="demo-upload-list" v-if="data.iconImage">
-							<img :src="`/uploads/${data.iconImage}`"/>
+							<img :src="`${data.iconImage}`"/>
 							 <div class="demo-upload-list-cover">
 								<Icon type="ios-trash-outline" @click="deleteImage"></Icon>
 							</div>
@@ -90,7 +90,7 @@
 						</div>
 						<div slot="footer">
 							<Button type="success" @click="editCategory" :disabled="isAdding" :loading="isAdding">{{isAdding ? 'editing...' : 'Update Category' }}</Button>
-							<Button type="primary" @click="editModal=false">Close</Button>
+							<Button type="primary" @click="closeEditModel">Close</Button>
 
 						</div>
 				</Modal>
@@ -136,7 +136,8 @@ export default {
 			 deleteItem: {},
              deletingIndex: -1,
 			 token  : '',
-			 iconImageName: false
+			 iconImageName: false,
+			 isEditingItem:false
 		 	}
 		},
 
@@ -144,7 +145,7 @@ export default {
 			async addCategory(){
 				 if(this.data.categoryName.trim()=='')return this.e('Category name is required')
 				 if(this.data.iconImage.trim()=='')return this.e('Image icon required')
-				 this.data.iconImage =`/uploads/${this.data.iconImage}`
+				 this.data.iconImage =`${this.data.iconImage}`
 				 const res =await this.callApi('post','app/create_category', this.data)
 				 if(res.status===201){
 					 this.categories.unshift(res.data)
@@ -190,14 +191,18 @@ export default {
 				}
 			},
 			showeditModal(category,index){
-				let obj={
-					id          :category.id,
-					categoryName:category.categoryName,
-					iconImage   :category.iconImage
-				}
-				this.editData = obj
+				// let obj={
+				// 	id          :category.id,
+				// 	categoryName:category.categoryName,
+				// 	iconImage   :category.iconImage
+				// }
+				// this.editData = obj
+
+				console.log(category)
+				this.editData =category
 				this.editModal= true
 				this.index    = index
+				this.isEditingItem=true
 			},
 			async deleteTag(){
 				//if(!confirm('Are you sure to delete this tag?')) return
@@ -220,6 +225,10 @@ export default {
 				this.showDeleteModel = true
 			},
 			handleSuccess (res, file) {
+				res = `/uploads/${res}`
+				if(this.isEditingItem){
+					return this.editData.iconImage = res
+				}
                this.data.iconImage = res
             },
 			handleError (res, file) {
@@ -244,13 +253,14 @@ export default {
                 });
             },
 			async deleteImage(isAdd = true ){
+				let image
 				if(!isAdd){
 					this.iconImageName = true
-					let image = this.editData.iconImage
+					image = this.editData.iconImage
 					this.editData.iconImage = ''
 					this.$refs.editUploads.clearFiles()
 				}else{
-					let image = this.data.iconImage
+					image = this.data.iconImage
 					this.data.iconImage = ''
 					this.$refs.uploads.clearFiles()
 				}
@@ -260,6 +270,10 @@ export default {
 					this.data.iconImage = image
 					this.swr()
 				}
+			},
+			closeEditModel(){
+				this.isEditingItem  = false
+				this.editModal      = false
 			}
 			
 		},
