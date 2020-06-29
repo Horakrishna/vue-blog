@@ -20,8 +20,8 @@
 								<td class="_table_name">{{tag.tagName}}</td>
 								<td format="yyyy/MM/dd" >{{tag.created_at | timeformat }}</td>
 								<td>
-									<button class="_btn _action_btn edit_btn1" type="button" @click="showeditModal(tag, i)">Edit</button>
-									<button class="_btn _action_btn make_btn1" type="button" @click="showdeletingModal(tag, i)"  :loading="tag.isDeleting">Delete</button>
+									<Button type="info" size="small" @click="showeditModal(tag, i)">Edit</Button>
+									<Button type="error" size="small" @click="showdeletingModal(tag, i)"  :loading="tag.isDeleting">Delete</Button>
 								</td>
 							</tr>
 						</table>
@@ -48,7 +48,7 @@
 				</Modal>
 
 				<!--Delete Model -->
-				 <Modal v-model="showDeleteModel" width="360">
+				 <!-- <Modal v-model="showDeleteModel" width="360">
 					<p slot="header" style="color:#f60;text-align:center">
 						<Icon type="ios-information-circle"></Icon>
 						<span>Delete confirmation</span>
@@ -60,13 +60,17 @@
 					<div slot="footer">
 						<Button type="error" size="large" long :loading="isDeleting" :disabled="isDeleting" @click="deleteTag">Delete</Button>
 					</div>
-				</Modal>
+				</Modal> -->
+				<deleteModal></deleteModal>
 			</div>
 		</div>
     </div>
 </template>
 
 <script>
+import deleteModal from '../components/deleteModel'
+import { mapGetters } from 'vuex'
+
 export default {
 	 data(){
 		 return {
@@ -136,13 +140,10 @@ export default {
 				this.index    = index
 			},
 			async deleteTag(){
-				//if(!confirm('Are you sure to delete this tag?')) return
-				//tag.isDeleting = true
-				//this.$set(tag,'isDeleting',true)
 				this.isDeleting =true
 				const res = await this.callApi('post','app/detete_tag', this.deleteItem)
 				if(res.status ===200){
-					this.tags.splice(this.deletingIndex, 1)
+					//this.tags.splice(this.deletingIndex, 1)
 					this.s('Tag has been deleted successfully')
 				}else{
 					this.swr()
@@ -151,9 +152,18 @@ export default {
 				this.showDeleteModel =false
 			},
 			showdeletingModal(tag, i){
-				this.deleteItem = tag
-				this.deletingIndex = i
-				this.showDeleteModel = true
+					const deleteModalObj = {
+						showDeleteModel : true,
+						deleteUrl       :'app/detete_tag',
+						data            :tag,
+						deletingIndex   : i,
+						isDeleted       :false
+				}
+				this.$store.commit('setDeletingModalObj', deleteModalObj)
+				console.log('delete method called')
+				// this.deleteItem = tag
+				// this.deletingIndex = i
+				// this.showDeleteModel = true
 			}
 
 			
@@ -165,7 +175,21 @@ export default {
 				}else{
 					this.swr()
 				}
-			}
+		},
+		components:{
+			deleteModal
+		},
+		computed : {
+			...mapGetters(['getDeleteModalObj'])
+		},
+		watch : {
+		getDeleteModalObj( obj ){
+	       if(obj.isDeleted){
+			   	this.tags.splice(obj.deletingIndex, 1)
+		   }
+			
+		}
+	}
 		
 }
 </script>

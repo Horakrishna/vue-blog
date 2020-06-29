@@ -22,8 +22,8 @@
 									<img :src="category.iconImage" />
 								</td>
 								<td>
-									<button class="_btn _action_btn edit_btn1" type="button" @click="showeditModal(category, i)">Edit</button>
-									<button class="_btn _action_btn make_btn1" type="button" @click="showdeletingModal(category, i)"  :loading="category.isDeleting">Delete</button>
+									<Button type="info" size="small" @click="showeditModal(category, i)">Edit</Button>
+									<Button type="error" size="small" @click="showdeletingModal(category, i)"  :loading="category.isDeleting">Delete</Button>
 								</td>
 							</tr>
 						</table>
@@ -94,27 +94,16 @@
 
 						</div>
 				</Modal>
-
-				<!--Delete Model -->
-				 <Modal v-model="showDeleteModel" width="360">
-					<p slot="header" style="color:#f60;text-align:center">
-						<Icon type="ios-information-circle"></Icon>
-						<span>Delete confirmation</span>
-					</p>
-					<div style="text-align:center">
-						
-						<p>Are you sure to delete tag?</p>
-					</div>
-					<div slot="footer">
-						<Button type="error" size="large" long :loading="isDeleting" :disabled="isDeleting" @click="deleteTag">Delete</Button>
-					</div>
-				</Modal>
+				<!--Delete Modal -->
+				
 			</div>
 		</div>
     </div>
 </template>
 
 <script>
+import deleteModal from '../components/deleteModel'
+
 export default {
 	 data(){
 		 return {
@@ -204,25 +193,22 @@ export default {
 				this.index    = index
 				this.isEditingItem=true
 			},
-			async deleteTag(){
-				//if(!confirm('Are you sure to delete this tag?')) return
-				//tag.isDeleting = true
-				//this.$set(tag,'isDeleting',true)
-				this.isDeleting =true
-				const res = await this.callApi('post','app/detete_tag', this.deleteItem)
-				if(res.status ===200){
-					this.tags.splice(this.deletingIndex, 1)
-					this.s('Tag has been deleted successfully')
-				}else{
-					this.swr()
+			
+			showdeletingModal(category, i){
+				const deleteModalObj = {
+						showDeleteModal :true,
+						deleteUrl       :'app/detete_category',
+						data            :category,
+						deletingIndex   : i,
+						isDeleted       :false
 				}
-				this.isDeleting =false
-				this.showDeleteModel =false
-			},
-			showdeletingModal(tag, i){
-				this.deleteItem = tag
-				this.deletingIndex = i
-				this.showDeleteModel = true
+				this.$store.commit('setDeletingModalObj', deleteModalObj)
+				console.log('delete method called')
+
+
+				// this.deleteItem = tag
+				// this.deletingIndex = i
+				// this.showDeleteModel = true
 			},
 			handleSuccess (res, file) {
 				res = `/uploads/${res}`
@@ -285,7 +271,11 @@ export default {
 				}else{
 					this.swr()
 				}
-			}
+		},
+		
+		components : {
+			deleteModal
+		}
 		
 }
 </script>
