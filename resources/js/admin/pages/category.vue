@@ -1,4 +1,3 @@
-
 <template>
     <div>
        <div class="content">
@@ -95,7 +94,7 @@
 						</div>
 				</Modal>
 				<!--Delete Modal -->
-				
+				<deleteModal></deleteModal>
 			</div>
 		</div>
     </div>
@@ -103,7 +102,7 @@
 
 <script>
 import deleteModal from '../components/deleteModel'
-
+import { mapGetters } from 'vuex'
 export default {
 	 data(){
 		 return {
@@ -180,15 +179,12 @@ export default {
 				}
 			},
 			showeditModal(category,index){
-				// let obj={
-				// 	id          :category.id,
-				// 	categoryName:category.categoryName,
-				// 	iconImage   :category.iconImage
-				// }
-				// this.editData = obj
-
-				console.log(category)
-				this.editData =category
+				let obj={
+					id          :category.id,
+					categoryName:category.categoryName,
+					iconImage   :category.iconImage
+				}
+				this.editData = obj
 				this.editModal= true
 				this.index    = index
 				this.isEditingItem=true
@@ -196,7 +192,7 @@ export default {
 			
 			showdeletingModal(category, i){
 				const deleteModalObj = {
-						showDeleteModal :true,
+						showDeleteModel :true,
 						deleteUrl       :'app/detete_category',
 						data            :category,
 						deletingIndex   : i,
@@ -275,7 +271,18 @@ export default {
 		
 		components : {
 			deleteModal
+		},
+		computed : {
+			...mapGetters(['getDeleteModalObj'])
+		},
+		watch : {
+		getDeleteModalObj( obj ){
+	       if(obj.isDeleted){
+			   	this.categories.splice(obj.deletingIndex, 1)
+		   }
+			
 		}
+	}
 		
 }
 </script>

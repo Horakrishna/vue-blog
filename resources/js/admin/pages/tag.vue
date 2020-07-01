@@ -47,20 +47,6 @@
 						</div>
 				</Modal>
 
-				<!--Delete Model -->
-				 <!-- <Modal v-model="showDeleteModel" width="360">
-					<p slot="header" style="color:#f60;text-align:center">
-						<Icon type="ios-information-circle"></Icon>
-						<span>Delete confirmation</span>
-					</p>
-					<div style="text-align:center">
-						
-						<p>Are you sure to delete tag?</p>
-					</div>
-					<div slot="footer">
-						<Button type="error" size="large" long :loading="isDeleting" :disabled="isDeleting" @click="deleteTag">Delete</Button>
-					</div>
-				</Modal> -->
 				<deleteModal></deleteModal>
 			</div>
 		</div>
@@ -160,7 +146,7 @@ export default {
 						isDeleted       :false
 				}
 				this.$store.commit('setDeletingModalObj', deleteModalObj)
-				console.log('delete method called')
+				//console.log('delete method called')
 				// this.deleteItem = tag
 				// this.deletingIndex = i
 				// this.showDeleteModel = true

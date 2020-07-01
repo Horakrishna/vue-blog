@@ -8,14 +8,24 @@ Vue.use(Router)
 // import Method from './components/pages/basic/methods'
 
 import Home from './components/pages/home'
+import Users from './admin/pages/adminUser'
 import Tag from './admin/pages/tag'
 import Category from './admin/pages/category'
+import Login from './admin/pages/login'
 import useCom from './vuex/Usecom'
 
 const routes = [
     {
         path: '/',
         component: Home
+    },
+    {
+        path: '/login',
+        component: Login
+    },
+    {
+        path: '/users',
+        component: Users
     },
     {
         path: '/useCom',
@@ -29,6 +39,7 @@ const routes = [
         path: '/categorys',
         component: Category
     },
+    
     // {
     //     path: '/my-2nd-vue-route',
     //     component: secondndPage
